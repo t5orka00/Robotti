@@ -1,0 +1,35 @@
+	locatedX = object_location[0] #ruudukko2_OrJa_var[0]
+	locatedY = object_location[1] #ruudukko2_OrJa_var[1]
+	
+	tempDist = 158/1000
+	tempSize = 70/1000
+
+	#tempDist2 = 120
+	textmsg(locatedX)
+	textmsg(locatedY)
+	textmsg(middleX)
+	textmsg(middleY)
+	textmsg(gameMark)
+	#if (locatedX > middleX + tempDist2):
+	# X
+	if ((locatedX > (middleX + tempDist - tempSize / 2)) and locatedX < ((middleX + tempDist + tempSize / 2))): 		
+		textmsg("asd")
+		# Y
+		if ((locatedY > (middleY - tempSize / 2)) and (locatedY < (middleY + tempSize / 2))): 
+			gameMark = mark
+			gameRunning = 1
+			#alotusChip_OrJa = alotuspalikka
+			read = "asd"
+			while read != "send_starter":
+				sleep(1)
+				read = socket_read_string()
+			end
+			
+			if gameMark == 1:
+				socket_send_string("1")
+				robotTurn = 1
+			elif gameMark == 2:
+				socket_send_string("0")
+			end
+		end
+	end

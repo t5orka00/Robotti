@@ -1,0 +1,88 @@
+	
+	#ennen looppeja 
+	# tempArray2 = [0,0,0, 0,0,0, 0,0,0]
+	# tempArray≔[0,0,0, 0,0,0, 0,0,0] viereen
+	tempArray2 = tempArray
+	
+	arraysNotSame = 0
+	i = 0
+	# Vertailee taulukoita, joiden pitaisi olla samat
+	while i < 9:
+		if tempArray[i] != tempArray2[i]:
+			# Taulukot ei ole samoja
+			arraysNotSame = 1 # talla sittekun exit kusee
+			#textmsg("ei pitais menna tanne")
+			#tempArray2 = tempArray # arrayn siirto whilella??
+			#exit # kusee kumminkin, miksi edes yritetaan nain??
+		end
+		i = i +1
+	end
+	
+	i = 0
+	if (arraysNotSame == 1):
+		while i < 9:
+			tempArray2[i] = tempArray[i]
+			
+			i = i + 1
+		end
+		textmsg("tempArrayt")
+		textmsg(tempArray)
+		textmsg(tempArray2)
+	elif arraysNotSame == 0:
+		# onko tullut muutos pelilaudan tilanteesseen
+		i = 0
+		arrayChanged = 0
+		
+		
+		# Vertailee taulukoita, onko jonkin ruudun pelimerkki muuttunut
+		while i < 9:
+			if tempArray[i] != lastTurnArray[i]:
+				# Taulukossa tullut muutos
+				arrayChanged = 1
+				#break
+			end
+			i = i +1
+		end
+		
+		# on tullut nappula lisaa pelialustalle
+		if ((tempCounter > counter) and (arrayChanged == 1)):
+			#textmsg("Counter, tempCounter")
+			#textmsg(counter)
+			#textmsg(tempCounter)
+			# Kun on tullut muutos
+			lastTurnArray = tempArray 
+			# O = 1, X = 2	
+			counter = tempCounter
+			
+			
+			# Lähetetään uusi boardi python koodille
+			socket_send_string("sending_board")
+			sleep(0.1)
+			
+			socket_send_string(lastTurnArray[0])
+			sleep(0.05)
+			socket_send_string(lastTurnArray[1])
+			sleep(0.05)
+			socket_send_string(lastTurnArray[2])
+			sleep(0.05)
+			
+			socket_send_string(lastTurnArray[3])
+			sleep(0.05)
+			socket_send_string(lastTurnArray[4])
+			sleep(0.05)
+			socket_send_string(lastTurnArray[5])
+			sleep(0.05)
+			
+			socket_send_string(lastTurnArray[6])
+			sleep(0.05)
+			socket_send_string(lastTurnArray[7])
+			sleep(0.05)
+			socket_send_string(lastTurnArray[8])
+			sleep(0.05)
+			
+			socket_send_string("end")
+
+		else:
+			arrayChanged = 0
+		end
+	end

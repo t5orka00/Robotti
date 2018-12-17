@@ -1,0 +1,101 @@
+	locatedX = loc[0]
+	locatedY = loc[1]
+
+	
+	tempCounter = tempCounter + 1
+	dist = 71/1000
+	pos = -1
+
+	textmsg("sijainti, keskipiste")
+	textmsg(locatedX)
+	#textmsg(locatedX, " ", locatedY)
+	textmsg(locatedY)
+	#textmsg(locatedY)
+
+	#textmsg(middleX)
+	textmsg(middleX)
+	textmsg(middleY)
+	#textmsg(middleY)
+
+	if locatedX < (middleX - dist / 2): 
+		# x--
+		# x--
+		# x--
+
+		if locatedY > (middleY + dist / 2): 
+			# x--
+			# ---
+			# ---
+			pos = 0
+			
+		elif locatedY < (middleY - dist / 2):
+			# ---
+			# ---
+			# x--
+			pos = 6
+			
+		else:
+			# ---
+			# x--
+			# ---
+			pos = 3
+		end
+		
+	# game markin valintaa varten hakualuetta rajataan tarkemmin
+	elif ((locatedX > (middleX + dist / 2)) and (locatedX < (middleX + dist * 1.5))): 
+		# --x
+		# --x
+		# --x
+
+		if locatedY > (middleY + dist / 2): 
+			# --x
+			# ---
+			# ---
+			pos = 2
+			
+		elif locatedY < (middleY - dist / 2):
+			# ---
+			# ---
+			# --x
+			pos = 8
+			
+		else:
+			# ---
+			# --x
+			# ---
+			pos = 5
+		end
+
+	#else:
+	elif ((locatedX > middleX - dist / 2) and (locatedX < middleX + dist / 2)):
+		# -x-
+		# -x-
+		# -x-
+
+		if locatedY > (middleY + dist / 2): 
+			# -x-
+			# ---
+			# ---
+			pos = 1
+			
+		elif locatedY < (middleY - dist / 2):
+			# ---
+			# ---
+			# -x-
+			pos = 7
+			
+		#else:
+		elif ((locatedY > middleY - dist / 2) and (locatedY < middleY + dist / 2)):
+			# ---
+			# -x-
+			# ---
+			pos = 4
+		end
+	end
+
+	if pos != -1:
+		tempArray[pos] = foundGameMark
+	else:
+		#popup("Jokin meni pieleen")
+		textmsg("ei ruudukossa")
+	end

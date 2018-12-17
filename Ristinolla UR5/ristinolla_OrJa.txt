@@ -1,0 +1,161 @@
+ Program
+   BeforeStart
+     socketOpen≔socket_open("192.168.100.57",30002)
+     Gripper Activate
+     Gripper Move34% (1)
+     counter≔0
+     lastTurnArray≔[0,0,0, 0,0,0, 0,0,0]
+     robotTurn≔0
+     gameMark≔2
+     MoveJ
+       Waypoint_1
+   Robot Program
+     'MoveJ'
+     Loop socketOpen ≟  False 
+       socketOpen≔socket_open("192.168.100.57",30002)
+       Wait: 0.5
+     socket_send_string("sending_coordinates")
+     Wait: 0.5
+     MoveJ
+       Waypoint_3
+     Camera Locate
+       For object(s) found
+         calibFeature_var≔ruudukko2_OrJa_var
+         calibLoc≔object_location
+         textmsg(calibLoc)
+         textmsg(calibLoc)
+         textmsg(calibLoc)
+         MoveL
+           Waypoint_4
+         keskipiste≔get_actual_tcp_pose()
+         'Popup'
+         'textmsg(keskipiste)'
+         middleX≔calibLoc[0]
+         middleY≔calibLoc[1]
+         socket_send_string(middleX)
+         Wait: 0.05
+         socket_send_string(middleY)
+         Wait: 0.05
+         MoveJ
+           Waypoint_3
+     'Camera Locate'
+     Wait: 0.1
+     socket_send_string("end")
+     Wait: 0.1
+     'keskikohdanLuku≔ False '
+     'Loop keskikohdanLuku≟ False '
+     gameMark≔-1
+     gameRunning≔0
+     Loop
+       Loop gameMark ≟ -1
+         Camera Locate
+           For object(s) found
+             mark≔1
+             alotusChip_OrJa_var≔ruudukko2_OrJa_var
+             alotuspalikka≔ruudukko2_OrJa_var
+             Script: valitseNappula_OrJa.script
+         Camera Locate
+           For object(s) found
+             mark≔2
+             alotusChip_OrJa_var≔ruudukko2_OrJa_var
+             alotuspalikka≔ruudukko2_OrJa_var
+             Script: valitseNappula_OrJa.script
+       Loop gameRunning ≟ 1
+         textmsg(robotTurn)
+         read≔socket_read_string()
+         If read≟"mark_cell"
+           'Popup'
+           socket_send_string("oke")
+           'read≔""'
+           Loop robotTurn≟1
+             textmsg(robotTurn)
+             Wait: 1.0
+             textmsg(robotTurn)
+             socket_send_string("ready_for_data")
+             Wait: 1.0
+             position≔socket_read_ascii_float(3)
+             textmsg(position)
+             If position[0]≠0
+               MoveL
+                 Waypoint_2
+               'Loop gameMark≟0'
+               If gameMark≟1
+                 Camera Locate
+                   For object(s) found
+                     MoveL
+                       Kohdistus_1
+                       Gripper Move34% (1)
+                       MoveL
+                         Kiinniottokoh_1
+                         Gripper Close (1)
+                         NostaHiemanYl_1
+               Else
+                 Camera Locate
+                   For object(s) found
+                     MoveL
+                       Kohdistus
+                       Gripper Move34% (1)
+                       MoveL
+                         Kiinniottokohta
+                         Gripper Close (1)
+                         NostaHiemanYlos
+               var_1≔p[position[1], position[2], calibLoc[2], calibLoc[3], calibLoc[4], calibLoc[5]]
+               textmsg(var_1)
+               'target2≔pose_trans(keskipiste, pose_sub(middle , var_1))'
+               target2≔pose_trans(keskipiste, pose_sub(calibLoc , var_1))
+               vienti≔pose_trans(target2, p[0, 0, -0.05, 0, 0, 0])
+               MoveL
+                 vienti
+                 target2
+                 Gripper Move34% (1)
+                 vienti
+               textmsg(keskipiste)
+               textmsg(calibFeature_var)
+               'Popup'
+               MoveJ
+                 Waypoint_3
+               lastTurnArray[position[3]] = gameMark
+               counter≔counter + 1
+               robotTurn≔0
+         ElseIf read ≟"player_turn"
+           read≔""
+           arrayChanged≔0
+           tempArray2≔[0,0,0, 0,0,0, 0,0,0]
+           socket_send_string("oke")
+           Loop arrayChanged≟0
+             tempArray≔[0,0,0, 0,0,0, 0,0,0]
+             tempCounter≔0
+             Camera Locate
+               For object(s) found
+                 foundGameMark≔1
+                 loc≔object_location
+                 'textmsg(loc)'
+                 Script: etsiRuutu_OrJa.script
+             Camera Locate
+               For object(s) found
+                 foundGameMark≔2
+                 loc≔object_location
+                 'textmsg(loc)'
+                 Script: etsiRuutu_OrJa.script
+             Script: etsiMuutoksia_OrJa.script
+             Wait: 0.1
+           robotTurn≔1
+           'Popup'
+         ElseIf read ≟ "gameover"
+           'MoveL'
+           Loop 2 times
+             Gripper Move65% (1)
+             Gripper Move30% (1)
+           Gripper Move34% (1)
+           gameMark≔-1
+           lastTurnArray≔[0,0,0, 0,0,0, 0,0,0]
+           gameRunning≔0
+           counter≔0
+           Wait: 5.0
+           robotTurn≔0
+           socket_send_string("oke")
+         Wait: 1.0
+     'Wait: 0.5'
+     socketOpen≔ False 
+     socket_close()
+     'If read[0]≠0'
